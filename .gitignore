@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+
+
+# Virtual Environment
+fashion/
+
+# SQLite database
+db.sqlite3
+
+# Django migrations
+*/migrations/*.py
+*/migrations/*.pyc
+
+# medias
+*.JPG
+
+# IDE specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+client.http
