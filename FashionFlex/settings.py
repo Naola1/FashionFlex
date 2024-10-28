@@ -26,12 +26,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     # External Libraries
-    'rest_framework',
-
+    "rest_framework",
     # my apps
-    'shop',
+    "shop",
 ]
 
 MIDDLEWARE = [
@@ -44,12 +42,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "clothes_rental.urls"
+ROOT_URLCONF = "FashionFlex.urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'templates'],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -62,7 +60,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "clothes_rental.wsgi.application"
+WSGI_APPLICATION = "FashionFlex.wsgi.application"
 
 
 # Database
@@ -75,9 +73,7 @@ DATABASES = {
     }
 }
 
-REST_FRAMEWORK = {
-    
-}
+REST_FRAMEWORK = {}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -113,8 +109,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR /'static']
+# STATIC_URL = "/static/"
+# STATICFILES_DIRS = [BASE_DIR / "static"]
 
 
 # Default primary key field type
