@@ -21,3 +21,4 @@ db.sqlite3
 *.sublime-project
 *.sublime-workspace
 client.http
+category.txt

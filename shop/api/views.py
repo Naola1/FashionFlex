@@ -18,40 +18,39 @@ class HomeListAPIView(ListAPIView):
 
 
 class DetailAPIView(APIView):
-    def get(self, request):
-        cloth_id = request.GET.get("id")
+    def get(self, request, cloth_id):
         cloth = Clothes.objects.get(id=cloth_id)
         serializer = Clothserializer(cloth)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-class DetailAPIView(APIView):
-    def post(self, request):
-        clothe_id = request.POST.get("id")
-        print(clothe_id)
-        duration = request.POST.get("duration")
-        rental_date = request.POST.get("rental_date", timezone.now())
+    def post(self, request, cloth_id):
+        duration = request.data.get("duration")
+        rental_date = request.data.get("rental_date", timezone.now())
 
         try:
-            clothe = Clothes.objects.get(id=clothe_id)  # Fetch the Clothes instance
+            clothe = Clothes.objects.get(id=cloth_id)
+            price_per_day = clothe.price
+            total_price = int(duration) * price_per_day  # Calculate the total price
+              # Fetch the Clothes instance
         except Clothes.DoesNotExist:
             return Response(
                 {"error": "Clothes not found."}, status=status.HTTP_404_NOT_FOUND
             )
 
         rental = Rental(
-            clothe=clothe,
+            clothe=clothe.id,
             rental_date=rental_date,
             duration=duration,
+            total_price=total_price,
         )
 
         serializer = Rentalserializer(rental)
+        print("serializer", serializer)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class RentedAPIView(APIView):
     def get(self, request):

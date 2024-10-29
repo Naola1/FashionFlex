@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from shop.models import Clothes
+from shop.models import Clothes, Rental
 
 
 class Clothserializer(ModelSerializer):
@@ -10,5 +10,5 @@ class Clothserializer(ModelSerializer):
 
 class Rentalserializer(ModelSerializer):
     class Meta:
-        model = Clothes
+        model = Rental
         fields = ["clothe", "rental_date", "duration", "return_date", "total_price"]
