@@ -30,4 +30,3 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ["name", "parent"]
     list_per_page = 20
 
-

@@ -14,41 +14,6 @@ class Category(models.Model):
         return not self.children.exists()
 
 class Clothes(models.Model):
-    GENDER_CHOICES = [
-        ("women", "Women"),
-        ("men", "Men"),
-        ("children", "Children"),
-    ]
-
-    STYLE_CHOICES = [
-        ("modern", "Modern (Western)"),
-        ("traditional", "Traditional (Local)"),
-    ]
-
-    ETHNICITY_CHOICES = [
-        ("oromo", "Oromo"),
-        ("amhara", "Amhara"),
-        ("tigray", "Tigray"),
-        ("afar", "Afar"),
-        ("snnpr", "SNNP"),
-        ("somali", "Somali"),
-        ("gambella", "Gambella"),
-        ("harari", "Harari"),
-    ]
-
-    ITEM_TYPE_CHOICES = [
-        ("clothing", "Traditional Clothing"),
-        ("footwear", "Traditional Footwear"),
-        ("accessories", "Traditional Accessories"),
-    ]
-
-    OCCASION_CHOICES = [
-        ("casual", "Casual"),
-        ("formal", "Formal"),
-        ("activewear", "Activewear"),
-        ("special", "Special Occasion"),
-        ("sustainable", "Sustainable Fashion"),
-    ]
 
     # Main fields for Clothes
     name = models.CharField(max_length=100)
@@ -67,13 +32,6 @@ class Clothes(models.Model):
 
     # Foreign Key to Category
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='clothes')
-
-    # Category fields
-    gender = models.CharField(max_length=20, choices=GENDER_CHOICES)
-    style = models.CharField(max_length=20, choices=STYLE_CHOICES)
-    ethnicity = models.CharField(max_length=20, choices=ETHNICITY_CHOICES, blank=True, null=True)
-    item_type = models.CharField(max_length=20, choices=ITEM_TYPE_CHOICES, blank=True, null=True)
-    occasion = models.CharField(max_length=20, choices=OCCASION_CHOICES, blank=True, null=True)
 
     def __str__(self):
         return self.name
