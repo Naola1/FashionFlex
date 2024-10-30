@@ -5,16 +5,17 @@ from .serializers import Clothserializer, Rentalserializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
+from .filters import ClotheFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 
 class HomeListAPIView(ListAPIView):
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_class = ClotheFilter
     serializer_class = Clothserializer
-
-    def get_queryset(self):
-        query = self.request.query_params.get("query", "")
-        if query:
-            return Clothes.objects.filter(category=query)
-        return Clothes.objects.all()
+    search_fields = ['name', 'description']
+    queryset = Clothes.objects.all() 
 
 
 class DetailAPIView(APIView):

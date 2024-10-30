@@ -2,6 +2,17 @@ from django.db import models
 from django.utils import timezone
 from datetime import timedelta
 
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+
+    def __str__(self):
+        return self.name
+
+    # Check if a category has no children
+    def is_leaf(self):
+        return not self.children.exists()
+
 class Clothes(models.Model):
     GENDER_CHOICES = [
         ("women", "Women"),
@@ -48,11 +59,14 @@ class Clothes(models.Model):
     image = models.ImageField(upload_to="clothes/")
     availability = models.BooleanField(default=True)
     rating = models.IntegerField()
-    stock = models.IntegerField()
+    stock = models.PositiveIntegerField()
     condition = models.CharField(max_length=50, default="new")
     views_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    # Foreign Key to Category
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='clothes')
 
     # Category fields
     gender = models.CharField(max_length=20, choices=GENDER_CHOICES)
