@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
+from datetime import date
 
 class Category(models.Model):
     name = models.CharField(max_length=100)

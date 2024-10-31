@@ -21,18 +21,17 @@ class Clothserializer(serializers.ModelSerializer):
     class Meta:
         model = Clothes
         fields = [
-            'name', 'size', 'color', 'price', 'category','description', 'image', 
-            'availability', 'rating', 'stock', 'condition', 'views_count', 
-            'created_at', 'updated_at', 'gender', 'style', 'ethnicity', 
-            'item_type', 'occasion'
+            'name', 'size', 'color', 'price', 'description', 'availability', 
+            'rating', 'stock', 'condition', 'views_count', 'created_at', 
+            'updated_at', 'category'
         ]
 
 
 class Rentalserializer(serializers.ModelSerializer):
+    clothe = serializers.SlugRelatedField(queryset=Clothes.objects.all(), slug_field='name', required=False)
     class Meta:
         model = Rental
         fields = [
             'clothe', 'rental_date', 'duration', 'total_price', 
             'created_at', 'updated_at'
         ]
-    

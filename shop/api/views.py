@@ -37,16 +37,17 @@ class DetailAPIView(APIView):
             return Response(
                 {"error": "Clothes not found."}, status=status.HTTP_404_NOT_FOUND
             )
-
-        rental = Rental(
-            clothe=clothe.id,
-            rental_date=rental_date,
-            duration=duration,
-            total_price=total_price,
-        )
-
-        serializer = Rentalserializer(rental)
-        print("serializer", serializer)
+        if isinstance(rental_date, timezone.datetime):
+            rental_date = rental_date.date()  # Convert to date
+        rental_data = {
+            "clothe": clothe,
+            "rental_date": rental_date,
+            "duration": duration,
+            "total_price": total_price,
+            # Add other required fields for Rental serializer if necessary
+        }
+        
+        serializer = Rentalserializer(data = rental_data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
