@@ -8,7 +8,8 @@ from django.utils import timezone
 from .filters import ClotheFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 class HomeListAPIView(ListAPIView):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
@@ -25,11 +26,14 @@ class DetailAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, cloth_id):
+        authentication_classes = [JWTAuthentication]
+        permission_classes = [IsAuthenticated]
         duration = request.data.get("duration")
         rental_date = request.data.get("rental_date", timezone.now())
 
         try:
             clothe = Clothes.objects.get(id=cloth_id)
+            user_id = request.user.id
             price_per_day = clothe.price
             total_price = int(duration) * price_per_day  # Calculate the total price
               # Fetch the Clothes instance
@@ -41,6 +45,7 @@ class DetailAPIView(APIView):
             rental_date = rental_date.date()  # Convert to date
         rental_data = {
             "clothe": clothe,
+            "user_id": user_id,
             "rental_date": rental_date,
             "duration": duration,
             "total_price": total_price,

@@ -32,6 +32,6 @@ class Rentalserializer(serializers.ModelSerializer):
     class Meta:
         model = Rental
         fields = [
-            'clothe', 'rental_date', 'duration', 'total_price', 
+            'clothe', 'user_id', 'rental_date', 'duration', 'total_price', 
             'created_at', 'updated_at'
         ]

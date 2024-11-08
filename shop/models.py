@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from datetime import timedelta
 from datetime import date
+from user.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -49,7 +50,7 @@ class Rental(models.Model):
         ("returned", "Returned"),
         ("overdue", "Overdue"),
     ]
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rentals")
     clothe = models.ForeignKey(
         Clothes, on_delete=models.CASCADE, related_name="rentals"
     )
