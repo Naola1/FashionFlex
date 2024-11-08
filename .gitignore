@@ -14,6 +14,7 @@ db.sqlite3
 
 # medias
 *.JPG
+*.jpeg
 
 # IDE specific files
 .vscode/
