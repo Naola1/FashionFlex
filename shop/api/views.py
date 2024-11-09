@@ -45,7 +45,7 @@ class DetailAPIView(APIView):
             rental_date = rental_date.date()  # Convert to date
         rental_data = {
             "clothe": clothe,
-            "user_id": user_id,
+            "user": user_id,
             "rental_date": rental_date,
             "duration": duration,
             "total_price": total_price,
