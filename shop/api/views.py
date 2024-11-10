@@ -5,7 +5,7 @@ from .serializers import Clothserializer, Rentalserializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
-from .filters import ClotheFilter
+from shop.filters import ClotheFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework_simplejwt.authentication import JWTAuthentication
