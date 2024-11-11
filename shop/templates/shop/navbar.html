@@ -1,7 +1,36 @@
-<nav>
-    <ul>
-        {% include 'women.html' %}
-        {% include 'men.html' %}
-        {% include 'children.html' %}
-      </ul>
-</nav>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg p-4">
+      <div class="container mx-auto flex justify-between items-center">
+        
+        <!-- Logo -->
+        <div class="text-2xl font-bold text-gray-800">Logo</div>
+    
+        <!-- Navigation Links -->
+        <div class="flex md:space-x-8">
+          
+            {% include "shop/women.html" %}
+            {% include "shop/men.html" %}
+            {% include "shop/children.html" %}
+    
+        </div>
+    
+        <!-- Search and Login/Signup -->
+        <div class="flex items-center space-x-4">
+          <!-- Search Bar -->
+          <div class="relative">
+            <input type="text" class="bg-gray-200 rounded-full px-4 py-1 pl-8 focus:outline-none focus:bg-white" placeholder="Search">
+            <svg class="w-4 h-4 absolute left-2 top-2 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+              <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm6-6h.01M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          
+          <!-- Sign Up | Login -->
+          <div class="text-gray-700 font-medium">
+            <a href="#" class="hover:text-gray-900">Sign Up</a> | <a href="#" class="hover:text-gray-900">Login</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    

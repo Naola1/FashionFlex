@@ -1,36 +1,22 @@
-document.addEventListener("DOMContentLoaded", function() {
-    let currentImageIndex = 0;
-    const images = document.querySelectorAll(".slider-image");
-    const totalImages = images.length;
+// JavaScript to enhance the interaction of nested dropdown menus
 
-    // Initialize the first image
-    images[currentImageIndex].classList.add("active");
-
-    document.getElementById("next").addEventListener("click", function() {
-        images[currentImageIndex].classList.remove("active");
-        currentImageIndex = (currentImageIndex + 1) % totalImages;
-        images[currentImageIndex].classList.add("active");
+document.addEventListener("DOMContentLoaded", () => {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+  
+    dropdownItems.forEach((item) => {
+      item.addEventListener("mouseenter", () => {
+        const submenu = item.querySelector(".submenu");
+        if (submenu) {
+          submenu.style.display = "block";
+        }
+      });
+  
+      item.addEventListener("mouseleave", () => {
+        const submenu = item.querySelector(".submenu");
+        if (submenu) {
+          submenu.style.display = "none";
+        }
+      });
     });
-
-    document.getElementById("prev").addEventListener("click", function() {
-        images[currentImageIndex].classList.remove("active");
-        currentImageIndex = (currentImageIndex - 1 + totalImages) % totalImages;
-        images[currentImageIndex].classList.add("active");
-    });
-
-    // Login/Logout Toggle Logic
-    const isLoggedIn = false; // Replace with actual login status
-    const loginLink = document.querySelector("nav ul li a[href='#login']");
-    const signupLink = document.querySelector("nav ul li a[href='#signup']");
-    const logoutLink = document.getElementById("logout");
-
-    if (isLoggedIn) {
-        loginLink.style.display = "none";
-        signupLink.style.display = "none";
-        logoutLink.style.display = "block";
-    } else {
-        loginLink.style.display = "block";
-        signupLink.style.display = "block";
-        logoutLink.style.display = "none";
-    }
-});
+  });
+  

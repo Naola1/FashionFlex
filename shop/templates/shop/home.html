@@ -1,34 +1,14 @@
-{% load static %}
+{% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clothe Rental Web App</title>
-    <link rel="stylesheet" href="{% static 'shop/css/style.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Navbar with Hover Dropdowns</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
+   {% tailwind_css %}
 </head>
-<body>
-    <header>
-      {% include 'navbar.html' %}
-    </header>
-    
-    <!-- <main> -->
-        <!-- Image Carousel for top display -->
-        <!-- <div class="background-slider"> -->
-            <!-- <img src="{% static 'shop/images/suit.jpeg' %}" alt="Suit Image 1" class="slider-image"> -->
-            <!-- <img src="{% static 'shop/images/suit2.jpg' %}" alt="Suit Image 2" class="slider-image"> -->
-            <!-- <img src="{% static 'shop/images/vello.jpg' %}" alt="Suit Image 3" class="slider-image"> -->
-            <!-- <button id="next">Next</button> -->
-            <!-- <button id="prev">Previous</button> -->
-        <!-- </div> -->
-        
-        <!-- <section class="clothing-display"> -->
-            <!-- Display of clothes will go here -->
-            <!-- <div class="clothing-item">Sample Clothing 1</div> -->
-            <!-- <div class="clothing-item">Sample Clothing 2</div> -->
-            <!-- <div class="clothing-item">Sample Clothing 3</div> -->
-        <!-- </section> -->
-    <!-- </main> -->
-    <!-- <script src="{% static 'shop/js/script.js' %}"></script>? -->
+    {% include "shop/navbar.html" %}
 </body>
 </html>

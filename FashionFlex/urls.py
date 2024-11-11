@@ -8,4 +8,6 @@ urlpatterns = [
     path("api/", include("user.api.urls")),
     path('api/cart/', include('cart.api.urls')),
     path('', include('shop.urls')),
+
+    path("__reload__/", include("django_browser_reload.urls")),
 ]
