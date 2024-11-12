@@ -9,7 +9,8 @@
   border-radius: 0.25rem;
   padding: 1rem;
   min-width: 10rem;
-  grid-template-columns: 1fr ;
+  grid-template-columns: 1fr;
+  z-index: 1000; /* Set a high z-index to bring it above other elements */
 }
 
 /* Show dropdown on hover */
@@ -28,6 +29,7 @@
   border-radius: 0.25rem;
   padding: 0.5rem;
   min-width: 8rem;
+  z-index: 1000; /* Ensure submenu is also above other elements */
 }
 
 /* Show submenu on hover of dropdown-item */
@@ -36,23 +38,26 @@
 }
 
 /* Styling for links */
-.dropdown-item a, .submenu a {
+.dropdown-item a,
+.submenu a {
   display: block;
   padding: 0.5rem;
   color: #4a4a4a;
   text-decoration: none;
 }
 
-.dropdown-item a:hover, .submenu a:hover {
+.dropdown-item a:hover,
+.submenu a:hover {
   color: #007bff; /* Customize hover color */
 }
 
-/* for the background */
+/* Carousel and Thumbnail Styles */
 .carousel {
   position: relative;
   width: 100%;
   height: 500px;
   overflow: hidden;
+  z-index: 1; /* Lower z-index for the carousel */
 }
 
 .carousel-image {
@@ -91,3 +96,14 @@
   opacity: 1;
 }
 
+.thumbnail-images img {
+  display: none; /* Initially hide all thumbnails */
+}
+
+.thumbnail-images img:nth-child(-n+2) {
+  display: block; /* Show only the first two by default */
+}
+
+.thumbnail-images {
+  overflow: hidden;
+}
