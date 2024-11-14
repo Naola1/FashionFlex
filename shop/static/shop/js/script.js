@@ -28,32 +28,28 @@ thumbnailImages.forEach((thumbnail, index) => {
   thumbnail.addEventListener('click', () => {
     currentIndex = index;
     updateMainImage(currentIndex);
-    visibleRangeStart = Math.floor(currentIndex / 2) * 2; // Adjust visible range based on current index
+    visibleRangeStart = Math.floor(currentIndex / 3) * 3; // Adjust visible range based on current index
     updateThumbnailVisibility();
     resetAutoRotate(); // Reset the auto-rotate timer on user interaction
   });
 });
 
 prevBtn.addEventListener('click', () => {
-  currentIndex = (currentIndex - 1 + thumbnailImages.length) % thumbnailImages.length;
+  currentIndex = (currentIndex - 1 + thumbnailImages.length) % thumbnailImages.length; // Wrap around
   updateMainImage(currentIndex);
 
   // Adjust visible range for thumbnails
-  if (currentIndex < visibleRangeStart) {
-    visibleRangeStart = Math.max(0, visibleRangeStart - 2); // Move back two thumbnails
-  }
+  visibleRangeStart = Math.floor(currentIndex / 3) * 3; // Always set to the correct range
   updateThumbnailVisibility();
   resetAutoRotate(); // Reset the auto-rotate timer on user interaction
 });
 
 nextBtn.addEventListener('click', () => {
-  currentIndex = (currentIndex + 1) % thumbnailImages.length;
+  currentIndex = (currentIndex + 1) % thumbnailImages.length; // Wrap around
   updateMainImage(currentIndex);
 
   // Adjust visible range for thumbnails
-  if (currentIndex >= visibleRangeStart + 2) {
-    visibleRangeStart = Math.min(thumbnailImages.length - 2, visibleRangeStart + 2); // Move forward two thumbnails
-  }
+  visibleRangeStart = Math.floor(currentIndex / 3) * 3; // Always set to the correct range
   updateThumbnailVisibility();
   resetAutoRotate(); // Reset the auto-rotate timer on user interaction
 });

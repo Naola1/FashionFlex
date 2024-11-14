@@ -28,8 +28,8 @@
         <img src="{% static 'shop/images/image6.jpeg' %}" alt="Thumbnail 6" class="w-32 h-32 mx-2 cursor-pointer" data-index="5">
       </div>
       <div class="buttons absolute bottom-4 left-1/2 transform -translate-x-1/2 flex">
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2 prev-btn">Previous</button>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded next-btn">Next</button>
+        <button class="bg-blue-500 hover:bg-blue-7 text-gray-500 font-bold py-2 px-4 rounded mr-2 prev-btn">Previous</button>
+        <button class="bg-blue-500 hover:bg-blue-7 text-gray-500 font-bold py-2 px-4 rounded next-btn">Next</button>
       </div>
 
       <!-- New Products Overlay -->
@@ -44,63 +44,29 @@
   <div class="container mx-auto py-10">
     <h2 class="text-3xl font-bold text-center mb-6">Available Clothes</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="{% static 'shop/images/image1.jpeg' %}" alt="Clothing Item 1" class="w-full h-48 object-cover">
-        <div class="p-4">
-          <h3 class="text-xl font-semibold">Image 1</h3>
-          <p class="text-gray-600">$29.99</p>
-          <p class="text-gray-700">Stylish clothing item description for Image 1.</p>
+        {% for cloth in clothes %}
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <img src="{{ cloth.image.url }}" alt="{{ cloth.name }}" class="w-full h-48 object-cover">
+            <div class="p-4">
+                <h3 class="text-xl font-semibold">{{ cloth.name }}</h3>
+                <p class="text-gray-600">${{ cloth.price }}</p>
+                <p class="text-gray-700">{{ cloth.description }}</p>
+                <p class="text-gray-500">Size: {{ cloth.size }}, Color: {{ cloth.color }}</p>
+                <p class="text-gray-500">Condition: {{ cloth.condition }}</p>
+            </div>
         </div>
-      </div>
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="{% static 'shop/images/image2.jpg' %}" alt="Clothing Item 2" class="w-full h-48 object-cover">
-        <div class="p-4">
-          <h3 class="text-xl font-semibold">Image 2</h3>
-          <p class="text-gray-600">$34.99</p>
-          <p class="text-gray-700">Stylish clothing item description for Image 2.</p>
-        </div>
-      </div>
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="{% static 'shop/images/image3.jpg' %}" alt="Clothing Item 3" class="w-full h-48 object-cover">
-        <div class="p-4">
-          <h3 class="text-xl font-semibold">Image 3</h3>
-          <p class="text-gray-600">$39.99</p>
-          <p class="text-gray-700">Stylish clothing item description for Image 3.</p>
-        </div>
-      </div>
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="{% static 'shop/images/image4.jpeg' %}" alt="Clothing Item 4" class="w-full h-48 object-cover">
-        <div class="p-4">
-          <h3 class="text-xl font-semibold">Image 4</h3>
-          <p class="text-gray-600">$24.99</p>
-          <p class="text-gray-700">Stylish clothing item description for Image 4.</p>
-        </div>
-      </div>
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="{% static 'shop/images/image5.jpeg' %}" alt="Clothing Item 5" class="w-full h-48 object-cover">
-        <div class="p-4">
-          <h3 class="text-xl font-semibold">Image 5</h3>
-          <p class="text-gray-600">$49.99</p>
-          <p class="text-gray-700">Stylish clothing item description for Image 5.</p>
-        </div>
-      </div>
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="{% static 'shop/images/image6.jpeg' %}" alt="Clothing Item 6" class="w-full h-48 object-cover">
-        <div class="p-4">
-          <h3 class="text-xl font-semibold">Image 6</h3>
-          <p class="text-gray-600">$59.99</p>
-          <p class="text-gray-700">Stylish clothing item description for Image 6.</p>
-        </div>
-      </div>
+        {% empty %}
+        <p class="text-center col-span-full text-gray-700">No clothes available.</p>
+        {% endfor %}
     </div>
 
     <!-- Pagination Section -->
     <div class="flex justify-center mt-8">
-      <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded-l">Previous</a>
-      <span class="flex items-center px-4">Page 1 of 3</span>
-      <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded-r">Next</a>
+        <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded-l">Previous</a>
+        <span class="flex items-center px-4">Page 1 of 3</span>
+        <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded-r">Next</a>
     </div>
-  </div>
+</div>
 
   <!-- Footer Section -->
   <footer class="bg-gray-800 text-white py-8">

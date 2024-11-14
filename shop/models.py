@@ -1,43 +1,50 @@
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
-from datetime import date
+from django.core.validators import MaxValueValidator, MinValueValidator
 from user.models import User
+from django.utils.text import slugify
 
+# Category Model with unique slug
 class Category(models.Model):
     name = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True, blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.name)
+            slug = base_slug
+            count = 1
+            while Category.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{count}"
+                count += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+    
     def __str__(self):
         return self.name
-
-    # Check if a category has no children
-    def is_leaf(self):
-        return not self.children.exists()
-
+# Clothes Model
 class Clothes(models.Model):
-
-    # Main fields for Clothes
     name = models.CharField(max_length=100)
+    description = models.TextField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='clothes')
     size = models.CharField(max_length=100)
     color = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.TextField()
     image = models.ImageField(upload_to="clothes/")
     availability = models.BooleanField(default=True)
-    rating = models.IntegerField()
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])  # Rating from 1 to 5
     stock = models.PositiveIntegerField()
     condition = models.CharField(max_length=50, default="new")
     views_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # Foreign Key to Category
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='clothes')
-
     def __str__(self):
         return self.name
 
+# Rental Model
 class Rental(models.Model):
     DURATION_CHOICES = [
         (2, "2 days"),
@@ -51,9 +58,7 @@ class Rental(models.Model):
         ("overdue", "Overdue"),
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rentals")
-    clothe = models.ForeignKey(
-        Clothes, on_delete=models.CASCADE, related_name="rentals"
-    )
+    clothe = models.ForeignKey(Clothes, on_delete=models.CASCADE, related_name="rentals")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
     rental_date = models.DateField(default=timezone.now)
     duration = models.IntegerField(choices=DURATION_CHOICES)
@@ -73,8 +78,10 @@ class Rental(models.Model):
         return self.rental_date + timedelta(days=self.duration)
 
     def save(self, *args, **kwargs):
-        self.total_price = self.calculate_total_price()
-        self.return_date = self.calculate_return_date()
+        if not self.total_price:
+            self.total_price = self.calculate_total_price()
+        if not self.return_date:
+            self.return_date = self.calculate_return_date()
         super().save(*args, **kwargs)
 
     def __str__(self):
