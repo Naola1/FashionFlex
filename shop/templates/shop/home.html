@@ -1,18 +1,8 @@
+{% extends 'shop/main.html' %}
 {% load static tailwind_tags %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive Carousel</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
-  {% tailwind_css %}
-</head>
-<body class="bg-gray-100">
-  {% include "shop/navbar.html" %}
+{% block content %}
 
   <div class="container-fluid p-0">
     <div class="relative h-screen">
@@ -28,8 +18,8 @@
         <img src="{% static 'shop/images/image6.jpeg' %}" alt="Thumbnail 6" class="w-32 h-32 mx-2 cursor-pointer" data-index="5">
       </div>
       <div class="buttons absolute bottom-4 left-1/2 transform -translate-x-1/2 flex">
-        <button class="bg-blue-500 hover:bg-blue-7 text-gray-500 font-bold py-2 px-4 rounded mr-2 prev-btn">Previous</button>
-        <button class="bg-blue-500 hover:bg-blue-7 text-gray-500 font-bold py-2 px-4 rounded next-btn">Next</button>
+        <button class="bg-gray-300 hover:bg-blue-7 text-black-500 font-bold py-2 px-4 rounded mr-2 prev-btn">Previous</button>
+        <button class="bg-gray-300 hover:bg-blue-7 text-black-500 font-bold py-2 px-4 rounded next-btn">Next</button>
       </div>
 
       <!-- New Products Overlay -->
@@ -45,14 +35,15 @@
     <h2 class="text-3xl font-bold text-center mb-6">Available Clothes</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for cloth in clothes %}
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <img src="{{ cloth.image.url }}" alt="{{ cloth.name }}" class="w-full h-48 object-cover">
+        <div class="bg-black rounded-lg shadow-md overflow-hidden ">
+            <img src="{{ cloth.image.url }}" alt="{{ cloth.name }}" class="rounded-md h-64 object-contain">
             <div class="p-4">
                 <h3 class="text-xl font-semibold">{{ cloth.name }}</h3>
-                <p class="text-gray-600">${{ cloth.price }}</p>
-                <p class="text-gray-700">{{ cloth.description }}</p>
-                <p class="text-gray-500">Size: {{ cloth.size }}, Color: {{ cloth.color }}</p>
-                <p class="text-gray-500">Condition: {{ cloth.condition }}</p>
+                <p class="text-gray-600">${{ cloth.price }} per day</p>
+                <a href="{% url 'cloth_detail' cloth.id %}" class="block bg-gray-300 text-black px-4 py-2 mt-2 rounded">Rent Now</a>
+                <!-- <p class="text-gray-700">{{ cloth.description }}</p> -->
+                <!-- <p class="text-gray-500">Size: {{ cloth.size }}, Color: {{ cloth.color }}</p> -->
+                <!-- <p class="text-gray-500">Condition: {{ cloth.condition }}</p> -->
             </div>
         </div>
         {% empty %}
@@ -68,35 +59,5 @@
     </div>
 </div>
 
-  <!-- Footer Section -->
-  <footer class="bg-gray-800 text-white py-8">
-    <div class="container mx-auto px-4">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div>
-          <h3 class="text-lg font-bold mb-2">About Us</h3>
-          <p class="text-sm">We are a leading fashion retailer offering the latest trends in clothing. Our mission is to provide quality apparel at affordable prices.</p>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold mb-2">Contact Us</h3>
-          <p class="text-sm">Email: <a href="mailto:support@example.com" class="hover:underline">support@example.com</a></p>
-          <p class="text-sm">Phone: <span class="hover:underline">(123) 456-7890</span></p>
-          <p class="text-sm">Address: 123 Fashion St, Style City, CA 12345</p>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold mb-2">Follow Us</h3>
-          <div class="flex space-x-4 mt-2">
-            <a href="#" class="hover:underline">Facebook</a>
-            <a href="#" class="hover:underline">Twitter</a>
-            <a href="#" class="hover:underline">Instagram</a>
-          </div>
-        </div>
-      </div>
-      <div class="mt-6 text-center text-sm">
-        <p>&copy; 2024 Your Company. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
-
-  <script src="{% static 'shop/js/script.js' %}"></script>
-</body>
-</html>
+{% endblock %}
+ 

@@ -6,6 +6,7 @@ from django.db.models import Q
 from shop.models import Clothes, Rental, Category
 from .forms import RentalForm
 from .filters import ClotheFilter
+from .forms import RentalForm
 
 # Home list view to show all available clothes with filtering and search functionality
 # views.py
@@ -51,31 +52,30 @@ def home_list_view(request):
 
 # Detail view for a specific clothing item and to handle rental requests
 def cloth_detail_view(request, cloth_id):
+    # Get the current cloth item
     cloth = get_object_or_404(Clothes, id=cloth_id)
 
+    # Fetch related clothes in the same category, excluding the current item
+    related_clothes = Clothes.objects.filter(category=cloth.category).exclude(id=cloth_id)[:3]
+
+    # Initialize the form
+    form = RentalForm()
+
     if request.method == "POST" and request.user.is_authenticated:
-        duration = request.POST.get("duration")
-        rental_date = request.POST.get("rental_date", timezone.now().date())
-
-        try:
-            price_per_day = cloth.price
-            total_price = int(duration) * price_per_day
-
-            rental_data = {
-                "clothe": cloth,
-                "user": request.user,
-                "rental_date": rental_date,
-                "duration": duration,
-                "total_price": total_price,
-            }
-            rental = Rental(**rental_data)
+        form = RentalForm(request.POST)
+        if form.is_valid():
+            rental = form.save(commit=False)
+            rental.user = request.user
+            rental.clothe = cloth
+            rental.total_price = rental.calculate_total_price()
             rental.save()
-
             return JsonResponse({'message': 'Rental created successfully!'}, status=201)
-        except Clothes.DoesNotExist:
-            return JsonResponse({"error": "Clothes not found."}, status=404)
 
-    return render(request, 'shop/detail.html', {'cloth': cloth})
+    return render(request, 'shop/detail.html', {
+        'cloth': cloth,
+        'related_clothes': related_clothes,
+        'form': form,
+    })
 
 # View to show all clothes rented by the current user
 @login_required

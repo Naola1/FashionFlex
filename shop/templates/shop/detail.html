@@ -1,101 +1,49 @@
+{% extends 'shop/main.html' %}
 {% load static tailwind_tags %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clothing Detail</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
-  {% tailwind_css %}
-</head>
-<body class="bg-gray-100">
-  {% include "shop/navbar.html" %}
-
-  <div class="container mx-auto py-10">
-    <h1 class="text-3xl font-bold text-center mb-6">Clothing Item Details</h1>
-    
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="{% static 'shop/images/image1.jpeg' %}" alt="Clothing Item" class="w-full h-96 object-cover">
-      </div>
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-2xl font-semibold">Stylish Jacket</h2>
-        <p class="text-gray-600 text-lg mb-4">$49.99</p>
-        <p class="text-gray-700 mb-4">This stylish jacket is perfect for chilly evenings. Made from high-quality materials, it combines comfort and fashion.</p>
-        
-        <h3 class="text-lg font-semibold mb-2">Features:</h3>
-        <ul class="list-disc list-inside mb-4">
-          <li>High-quality fabric</li>
-          <li>Available in multiple sizes</li>
-          <li>Machine washable</li>
-        </ul>
-
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add to Cart</button>
-      </div>
+{% block content %}
+<div class="container mx-auto py-12">
+  <!-- Clothing Item Details Header -->
+  <h1 class="text-4xl font-bold text-center text-gray-800 mb-10">Clothing Item Details</h1>
+  
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <!-- Image Section -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <img src="{{ cloth.image.url }}" alt="{{ cloth.name }}" class="w-full h-96 object-cover">
     </div>
-
-    <div class="mt-8">
-      <h3 class="text-xl font-semibold mb-4">Similar Items</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <img src="{% static 'shop/images/image2.jpg' %}" alt="Similar Item 1" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h4 class="text-lg font-semibold">Image 2</h4>
-            <p class="text-gray-600">$34.99</p>
-            <a href="clothing_detail.html" class="text-blue-500 hover:underline">View Details</a>
-          </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <img src="{% static 'shop/images/image3.jpg' %}" alt="Similar Item 2" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h4 class="text-lg font-semibold">Image 3</h4>
-            <p class="text-gray-600">$39.99</p>
-            <a href="clothing_detail.html" class="text-blue-500 hover:underline">View Details</a>
-          </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <img src="{% static 'shop/images/image4.jpeg' %}" alt="Similar Item 3" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h4 class="text-lg font-semibold">Image 4</h4>
-            <p class="text-gray-600">$24.99</p>
-            <a href="clothing_detail.html" class="text-blue-500 hover:underline">View Details</a>
-          </div>
-        </div>
-      </div>
+    
+    <!-- Details Section -->
+    <div class="bg-white rounded-lg shadow-lg p-8">
+      <h2 class="text-3xl font-bold text-gray-800 mb-4">{{ cloth.name }}</h2>
+      <p class="text-gray-700 text-lg mb-6">{{ cloth.description }}</p>
+      <p class="text-xl font-semibold text-blue-600 mb-4">Price per day: ${{ cloth.price }}</p>
+      <!-- Rental Form -->
+      <form method="post" class="bg-gray-100 rounded-lg p-6">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg mt-4">
+          Rent Now
+        </button>
+      </form>
     </div>
   </div>
-
-  <footer class="bg-gray-800 text-white py-8">
-    <div class="container mx-auto px-4">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div>
-          <h3 class="text-lg font-bold mb-2">About Us</h3>
-          <p class="text-sm">We are a leading fashion retailer offering the latest trends in clothing. Our mission is to provide quality apparel at affordable prices.</p>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold mb-2">Contact Us</h3>
-          <p class="text-sm">Email: <a href="mailto:support@example.com" class="hover:underline">support@example.com</a></p>
-          <p class="text-sm">Phone: <span class="hover:underline">(123) 456-7890</span></p>
-          <p class="text-sm">Address: 123 Fashion St, Style City, CA 12345</p>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold mb-2">Follow Us</h3>
-          <div class="flex space-x-4 mt-2">
-            <a href="#" class="hover:underline">Facebook</a>
-            <a href="#" class="hover:underline">Twitter</a>
-            <a href="#" class="hover:underline">Instagram</a>
-          </div>
+  <!-- Similar Items Section -->
+  <div class="mt-12">
+    <h3 class="text-3xl font-semibold text-gray-800 mb-6">Similar Items</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for item in related_clothes %}
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-48 object-cover">
+        <div class="p-4">
+          <h4 class="text-lg font-semibold text-gray-800">{{ item.name }}</h4>
+          <p class="text-gray-600">${{ item.price }}</p>
+          <a href="{% url 'cloth_detail' item.id %}" 
+             class="text-blue-500 font-medium hover:text-blue-700 mt-2 inline-block">View Details</a>
         </div>
       </div>
-      <div class="mt-6 text-center text-sm">
-        <p>&copy; 2024 Your Company. All rights reserved.</p>
-      </div>
+      {% endfor %}
     </div>
-  </footer>
-
-  <script src="{% static 'shop/js/script.js' %}"></script>
-</body>
-</html>
+  </div>
+</div>
+{% endblock %}

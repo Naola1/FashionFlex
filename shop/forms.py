@@ -1,12 +1,16 @@
-# forms.py
 from django import forms
-from shop.models import Rental
-from django.utils import timezone
+from .models import Rental
 
 class RentalForm(forms.ModelForm):
-    duration = forms.IntegerField(min_value=1, label="Rental Duration (days)")
-    rental_date = forms.DateField(initial=timezone.now().date(), widget=forms.SelectDateWidget)
-
     class Meta:
         model = Rental
-        fields = ['duration', 'rental_date']
+        fields = ['duration', 'rental_date', 'notes']
+        widgets = {
+            'rental_date': forms.DateInput(attrs={'type': 'date'}),
+            'notes': forms.Textarea(attrs={'rows': 3}),
+        }
+        labels = {
+            'duration': 'Rental Duration',
+            'rental_date': 'Rental Date',
+            'notes': 'Additional Notes (Optional)',
+        }

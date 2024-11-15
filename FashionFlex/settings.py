@@ -81,6 +81,9 @@ TEMPLATES = [
     },
 ]
 
+MEDIA_URL = '/media/'  # URL for accessing media files in templates
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 WSGI_APPLICATION = "FashionFlex.wsgi.application"
 
 
