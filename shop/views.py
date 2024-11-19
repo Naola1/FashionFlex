@@ -25,7 +25,7 @@ def get_all_child_categories(category):
         all_children.extend(get_all_child_categories(child))  # Add grandchildren, etc.
     return all_children
 
-def home_list_view(request):
+def home_view(request):
     filterset = ClotheFilter(request.GET, queryset=Clothes.objects.all())
     search_query = request.GET.get('search', '')
     category_slug = request.GET.get('category', '')

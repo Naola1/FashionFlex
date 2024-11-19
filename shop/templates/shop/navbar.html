@@ -6,7 +6,7 @@
         
         <!-- Logo -->
         <div class="text-2xl font-bold text-gray-800">
-          <a href="{% url 'home_list' %}" class="hover:text-blue-500 cursor-pointer">Logo</a>
+          <a href="{% url 'home' %}" class="hover:text-blue-500 cursor-pointer">Logo</a>
         </div>
         <!-- Navigation Links -->
         <div class="flex md:space-x-8">
@@ -29,7 +29,7 @@
           
           <!-- Sign Up | Login -->
           <div class="text-gray-700 font-medium">
-            <a href="#" class="hover:text-gray-900">Sign Up</a> | <a href="#" class="hover:text-gray-900">Login</a>
+            <a href="{% url 'register' %}" class="hover:text-gray-900">Sign Up</a> | <a href="{% url 'login' %}" class="hover:text-gray-900">Login</a>
           </div>
         </div>
       </div>

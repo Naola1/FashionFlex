@@ -31,10 +31,11 @@
   <!-- Similar Items Section -->
   <div class="mt-12">
     <h3 class="text-3xl font-semibold text-gray-800 mb-6">Similar Items</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
       {% for item in related_clothes %}
       <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-48 object-cover">
+        <!-- <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-48 object-cover"> -->
+        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="rounded-md h-64 object-contain mx-auto">
         <div class="p-4">
           <h4 class="text-lg font-semibold text-gray-800">{{ item.name }}</h4>
           <p class="text-gray-600">${{ item.price }}</p>

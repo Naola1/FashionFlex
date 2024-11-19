@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Ludiflex | Login</title>
+   <!-- BOXICONS -->
+   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+   <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1">
+</head>
+<body>
+  <div class="wrapper">
+     <div class="login-box">
+         <div class="login-header">Login</div>
+         <form method="POST" action="{% url 'login' %}">
+             {% csrf_token %}
+             {% if form.errors %}
+                 <div class="error-box">
+                     {% for field, errors in form.errors.items %}
+                         {% for error in errors %}
+                             <p>{{ field|title }}: {{ error }}</p>
+                         {% endfor %}
+                     {% endfor %}
+                 </div>
+             {% endif %}
+             <div class="input-box">
+                 <input type="email" id="email" class="input-field" name="email" required>
+                 <label for="email" class="label">Email</label>
+                 <i class="bx bx-user icon"></i>
+             </div>
+             <div class="input-box">
+                 <input type="password" id="pass" class="input-field" name="password" required>
+                 <label for="pass" class="label">Password</label>
+                 <i class="bx bx-lock-alt icon"></i>
+             </div>
+             <div class="remember-forgot">
+                 <div class="remember-me">
+                     <input type="checkbox" id="remember" name="remember">
+                     <label for="remember">Remember me</label>
+                 </div>
+                 <a href="#" class="forgot">Forgot password?</a>
+             </div>
+             <button type="submit" class="input-submit">Login</button>
+             <div class="register">
+                 <span>Don't have an account? <a href="{% url 'register' %}">Register</a></span>
+             </div>
+         </form>
+     </div>
+ </div>
+</body>
+</html>
