@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -6,6 +6,10 @@ from django.db.models import Q
 from shop.models import Clothes, Rental, Category
 from .forms import RentalForm
 from .filters import ClotheFilter
+from .forms import RentalForm
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from decimal import Decimal
 from .forms import RentalForm
 
 # Home list view to show all available clothes with filtering and search functionality
@@ -86,3 +90,61 @@ def rented_view(request):
         'rented_clothes': rented_clothes,
     }
     return render(request, 'shop/rented_list.html', context)
+
+@login_required
+@require_POST
+def process_payment(request):
+    try:
+        # Get form data
+        cloth_id = request.POST.get('cloth_id')
+        duration = int(request.POST.get('rental_duration'))
+        start_date = request.POST.get('rental_start_date')
+        notes = request.POST.get('rental_notes')
+        total_amount = Decimal(request.POST.get('total_amount'))
+
+        # Get the cloth
+        cloth = get_object_or_404(Clothes, id=cloth_id)
+
+        # Validate availability
+        if not cloth.is_available:
+            return JsonResponse({
+                'success': False,
+                'message': 'This item is no longer available.'
+            }, status=400)
+
+        # Process payment (integrate with your payment gateway here)
+        # This is where you'd integrate with Stripe, PayPal, etc.
+        try:
+            # Placeholder for payment processing
+            payment_successful = True  # Replace with actual payment processing
+            
+            if payment_successful:
+                # Create rental order
+                rental_order = Rental.objects.create(
+                    user=request.user,
+                    cloth=cloth,
+                    duration=duration,
+                    start_date=start_date,
+                    total_amount=total_amount,
+                    notes=notes,
+                    status='confirmed'
+                )
+                
+                # Update cloth availability
+                cloth.is_available = False
+                cloth.save()
+                
+                # Redirect to success page
+                return redirect('rental_success', order_id=rental_order.id)
+            
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'message': 'Payment processing failed. Please try again.'
+            }, status=400)
+
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': 'An error occurred. Please try again.'
+        }, status=400)

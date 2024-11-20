@@ -76,7 +76,7 @@ def forgot_password_view(request):
                 messages.error(request, "No user is associated with this email address.")
     else:
         form = PasswordResetForm()
-    return render(request, "forgot_password.html", {"form": form})
+    return render(request, "user/change_password.html", {"form": form})
 
 # Reset password view
 def reset_password_view(request, uidb64, token):
