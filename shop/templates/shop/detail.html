@@ -1,50 +1,85 @@
 {% extends 'shop/main.html' %}
-{% load static tailwind_tags %}
 {% load static %}
 
 {% block content %}
-<div class="container mx-auto py-12">
-  <!-- Clothing Item Details Header -->
-  <h1 class="text-4xl font-bold text-center text-gray-800 mb-10">Clothing Item Details</h1>
-  
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-    <!-- Image Section -->
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-      <img src="{{ cloth.image.url }}" alt="{{ cloth.name }}" class="w-full h-96 object-cover">
-    </div>
+<div class="container mx-auto py-8 px-4">
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">{{ cloth.name }}</h1>
     
-    <!-- Details Section -->
-    <div class="bg-white rounded-lg shadow-lg p-8">
-      <h2 class="text-3xl font-bold text-gray-800 mb-4">{{ cloth.name }}</h2>
-      <p class="text-gray-700 text-lg mb-6">{{ cloth.description }}</p>
-      <p class="text-xl font-semibold text-blue-600 mb-4">Price per day: ${{ cloth.price }}</p>
-      <!-- Rental Form -->
-      <form method="post" class="bg-gray-100 rounded-lg p-6">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg mt-4">
-          Rent Now
-        </button>
-      </form>
-    </div>
-  </div>
-  <!-- Similar Items Section -->
-  <div class="mt-12">
-    <h3 class="text-3xl font-semibold text-gray-800 mb-6">Similar Items</h3>
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-      {% for item in related_clothes %}
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <!-- <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-48 object-cover"> -->
-        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="rounded-md h-64 object-contain mx-auto">
-        <div class="p-4">
-          <h4 class="text-lg font-semibold text-gray-800">{{ item.name }}</h4>
-          <p class="text-gray-600">${{ item.price }}</p>
-          <a href="{% url 'cloth_detail' item.id %}" 
-             class="text-blue-500 font-medium hover:text-blue-700 mt-2 inline-block">View Details</a>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Image Section -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <img src="{{ cloth.image.url }}" alt="{{ cloth.name }}" class="w-full h-full object-cover">
         </div>
-      </div>
-      {% endfor %}
+
+        <!-- Details Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">{{ cloth.name }}</h2>
+            <p class="text-gray-600 mb-4">{{ cloth.description }}</p>
+            <p class="text-xl font-semibold text-blue-600 mb-6" data-price="{{ price|stringformat:'f' }}">Price per day: ${{ price }}</p>
+
+            <form id="rentalForm" method="POST" class="space-y-4">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Rental Duration</label>
+                    <select id="duration" name="duration" class="rental-select w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        {% for duration_value, duration_label in form.duration.field.choices %}
+                            <option value="{{ duration_value }}">{{ duration_label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Start Date</label>
+                    <input type="date" id="rental_date" name="rental_date" class="date-input w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Return Date</label>
+                    <input type="date" id="return_date" name="return_date" class="date-input-readonly w-full p-2 border border-gray-300 rounded-md bg-gray-50" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Additional Notes</label>
+                    <textarea id="notes" name="notes" class="notes-textarea w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+                </div>
+
+                <div class="price-summary bg-gray-50 p-4 rounded-md">
+                    <div class="price-row total flex justify-between items-center">
+                        <span class="font-bold">Total Price:</span>
+                        <span id="totalPrice" class="text-lg font-semibold text-blue-600">$0.00</span>
+                    </div>
+                </div>
+
+                {% if user.is_authenticated %}
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">
+                        Rent Now
+                    </button>
+                {% else %}
+                    <a href="{% url 'login' %}" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200 block text-center">
+                        Login to Rent
+                    </a>
+                {% endif %}
+            </form>
+        </div>
     </div>
-  </div>
+
+    <!-- Related Items Section -->
+    {% if related_clothes %}
+    <div class="mt-12">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6">Related Items</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-7">
+            {% for related_item in related_clothes %}
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <img src="{{ related_item.image.url }}" alt="{{ related_item.name }}" class="rounded-md h-64 object-contain mx-auto">
+                <div class="p-4">
+                    <h4 class="text-lg font-semibold">{{ related_item.name }}</h4>
+                    <p class="text-blue-600">${{ related_item.price }} per day</p>
+                    <a href="{% url 'cloth_detail' related_item.id %}" class="mt-2 inline-block text-blue-500 hover:text-blue-700">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

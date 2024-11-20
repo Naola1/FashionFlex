@@ -107,3 +107,129 @@
 .thumbnail-images {
   overflow: hidden;
 }
+/* Form Elements */
+.rental-select {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+  transition: all 0.3s ease;
+}
+
+.date-input {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+  transition: all 0.3s ease;
+}
+
+.date-input-readonly {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50;
+  cursor: not-allowed;
+}
+
+.notes-textarea {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+  transition: all 0.3s ease;
+  resize: vertical;
+}
+
+/* Price Summary Section */
+.price-summary {
+  @apply bg-gray-50 p-4 rounded-md;
+}
+
+.price-row {
+  @apply flex justify-between mb-2;
+}
+
+.price-row.total {
+  @apply font-bold border-t border-gray-300 pt-2 mt-2;
+}
+
+/* Rent Button */
+.rent-button {
+  @apply w-full bg-blue-600 text-white py-2 px-4 rounded-md;
+  transition: all 0.3s ease;
+}
+
+.rent-button:hover {
+  @apply bg-blue-700;
+  transform: translateY(-1px);
+}
+
+.rent-button:active {
+  transform: translateY(0);
+}
+
+/* Hover Effects */
+.rental-select:hover,
+.date-input:hover,
+.notes-textarea:hover {
+  @apply border-blue-400;
+}
+
+/* Focus States */
+.rental-select:focus,
+.date-input:focus,
+.notes-textarea:focus {
+  @apply border-blue-500 ring-2 ring-blue-500 ring-opacity-50;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .container {
+      @apply px-4;
+  }
+  
+  .price-summary {
+      @apply mx-0;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+.form-group {
+  animation: fadeIn 0.3s ease-out;
+}
+/* Add these styles to your existing CSS file */
+.rental-select {
+  @apply appearance-none w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.date-input {
+  @apply w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.date-input-readonly {
+  @apply w-full p-2 border border-gray-300 rounded-md bg-gray-50 cursor-not-allowed;
+}
+
+.notes-textarea {
+  @apply w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.rent-button {
+  @apply w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200;
+}
+
+.price-summary {
+  @apply bg-gray-50 p-4 rounded-md;
+}
+
+.price-row {
+  @apply flex justify-between items-center;
+}
+
+.total {
+  @apply font-bold;
+}
+
+#totalPrice {
+  @apply text-lg font-semibold text-blue-600;
+}

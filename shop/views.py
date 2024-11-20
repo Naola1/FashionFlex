@@ -75,6 +75,7 @@ def cloth_detail_view(request, cloth_id):
         'cloth': cloth,
         'related_clothes': related_clothes,
         'form': form,
+        'price': float(cloth.price),
     })
 
 # View to show all clothes rented by the current user
