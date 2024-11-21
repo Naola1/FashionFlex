@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from decimal import Decimal
 from .forms import RentalForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Home list view to show all available clothes with filtering and search functionality
 # views.py
@@ -30,7 +31,12 @@ def get_all_child_categories(category):
     return all_children
 
 def home_view(request):
-    filterset = ClotheFilter(request.GET, queryset=Clothes.objects.all())
+    # Filter available clothes based on stock or other availability indicator
+    # Modify this condition based on your actual model
+    available_clothes = Clothes.objects.filter(stock__gt=0)
+    
+    # Apply search and category filters
+    filterset = ClotheFilter(request.GET, queryset=available_clothes)
     search_query = request.GET.get('search', '')
     category_slug = request.GET.get('category', '')
 
@@ -48,11 +54,23 @@ def home_view(request):
     else:
         clothes = filterset.qs
 
+    # Pagination
+    paginator = Paginator(clothes, 10)  # 10 items per page
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
     context = {
-        'clothes': clothes,
+        'clothes': page_obj,
+        'paginator': paginator,
+        'page_obj': page_obj,
     }
     return render(request, 'shop/home.html', context)
-
 
 # Detail view for a specific clothing item and to handle rental requests
 def cloth_detail_view(request, cloth_id):

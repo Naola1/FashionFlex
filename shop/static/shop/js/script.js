@@ -213,3 +213,68 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+    document.addEventListener('DOMContentLoaded', () => {
+        const clothesGrid = document.getElementById('clothes-grid');
+        const paginationLinks = document.querySelectorAll('a[href^="?page="]');
+    
+        paginationLinks.forEach(link => {
+            link.addEventListener('click', async (e) => {
+                e.preventDefault();
+                
+                try {
+                    const response = await fetch(link.href);
+                    const html = await response.text();
+                    
+                    // Create a temporary div to parse the HTML
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+                    
+                    // Replace the clothes grid and pagination
+                    const newClothesGrid = tempDiv.querySelector('#clothes-grid');
+                    const newPaginationSection = tempDiv.querySelector('.flex.justify-center');
+                    
+                    clothesGrid.innerHTML = newClothesGrid.innerHTML;
+                    document.querySelector('.flex.justify-center').innerHTML = newPaginationSection.innerHTML;
+                    
+                    // Re-attach event listeners to new pagination links
+                    attachPaginationListeners();
+                    
+                    // Scroll to top of clothes section
+                    clothesGrid.scrollIntoView({ behavior: 'smooth' });
+                } catch (error) {
+                    console.error('Error loading page:', error);
+                    alert('Failed to load page. Please try again.');
+                }
+            });
+        });
+    
+        function attachPaginationListeners() {
+            const newPaginationLinks = document.querySelectorAll('a[href^="?page="]');
+            newPaginationLinks.forEach(link => {
+                link.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    
+                    try {
+                        const response = await fetch(link.href);
+                        const html = await response.text();
+                        
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = html;
+                        
+                        const newClothesGrid = tempDiv.querySelector('#clothes-grid');
+                        const newPaginationSection = tempDiv.querySelector('.flex.justify-center');
+                        
+                        clothesGrid.innerHTML = newClothesGrid.innerHTML;
+                        document.querySelector('.flex.justify-center').innerHTML = newPaginationSection.innerHTML;
+                        
+                        attachPaginationListeners();
+                        
+                        clothesGrid.scrollIntoView({ behavior: 'smooth' });
+                    } catch (error) {
+                        console.error('Error loading page:', error);
+                        alert('Failed to load page. Please try again.');
+                    }
+                });
+            });
+        }
+    });

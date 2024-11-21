@@ -30,33 +30,41 @@
     </div>
   </div>
 
-  <!-- Available Clothes Section -->
-  <div class="container mx-auto py-10">
-    <h2 class="text-3xl font-bold text-center mb-6">Available Clothes</h2>
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-7">
-        {% for cloth in clothes %}
-        <div class="bg-white rounded-lg shadow-md overflow-hidden ">
-            <img src="{{ cloth.image.url }}" alt="{{ cloth.name }}" class="rounded-md h-64 object-contain mx-auto">
-            <div class="p-4">
-                <h3 class="text-xl font-semibold">{{ cloth.name }}</h3>
-                <p class="text-gray-600">${{ cloth.price }} per day</p>
-                <a href="{% url 'cloth_detail' cloth.id %}" class="block bg-gray-300 text-black px-4 py-2 mt-2 rounded">Rent Now</a>
-                <!-- <p class="text-gray-700">{{ cloth.description }}</p> -->
-                <!-- <p class="text-gray-500">Size: {{ cloth.size }}, Color: {{ cloth.color }}</p> -->
-                <!-- <p class="text-gray-500">Condition: {{ cloth.condition }}</p> -->
-            </div>
-        </div>
-        {% empty %}
-        <p class="text-center col-span-full text-gray-700">No clothes available.</p>
-        {% endfor %}
-    </div>
+ <!-- Available Clothes Section -->
+<div class="container mx-auto py-10">
+  <h2 class="text-3xl font-bold text-center mb-6">Available Clothes</h2>
+  
+  <div id="clothes-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-7">
+      {% for cloth in clothes %}
+          <div class="cloth-item bg-white rounded-lg shadow-md overflow-hidden">
+              <img src="{{ cloth.image.url }}" alt="{{ cloth.name }}" class="rounded-md h-64 object-contain mx-auto">
+              <div class="p-4">
+                  <h3 class="text-xl font-semibold">{{ cloth.name }}</h3>
+                  <p class="text-gray-600">${{ cloth.price }} per day</p>
+                  <a href="{% url 'cloth_detail' cloth.id %}" class="block bg-gray-300 text-black px-4 py-2 mt-2 rounded">Rent Now</a>
+              </div>
+          </div>
+      {% empty %}
+          <p class="text-center col-span-full text-gray-700">No clothes available.</p>
+      {% endfor %}
+  </div>
 
-    <!-- Pagination Section -->
-    <div class="flex justify-center mt-8">
-        <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded-l">Previous</a>
-        <span class="flex items-center px-4">Page 1 of 3</span>
-        <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded-r">Next</a>
-    </div>
+  <!-- Pagination Section -->
+  <div class="flex justify-center mt-8">
+      {% if page_obj.has_previous %}
+          <a href="?page=1" class="bg-blue-500 text-white px-4 py-2 rounded-l">First</a>
+          <a href="?page={{ page_obj.previous_page_number }}" class="bg-blue-500 text-white px-4 py-2">Previous</a>
+      {% endif %}
+
+      <span class="flex items-center px-4">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+      </span>
+
+      {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}" class="bg-blue-500 text-white px-4 py-2">Next</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}" class="bg-blue-500 text-white px-4 py-2 rounded-r">Last</a>
+      {% endif %}
+  </div>
 </div>
 
 {% endblock %}
