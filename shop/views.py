@@ -20,20 +20,28 @@ from django.db.models import Q
 from .models import Clothes
 from .filters import ClotheFilter
 
+from django.shortcuts import render
+from django.db.models import Q
+from .models import Clothes
+from .filters import ClotheFilter
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 def get_all_child_categories(category):
     """
     Recursively get all child categories of a given category.
     """
-    children = category.children.all()  # Get direct children
-    all_children = list(children)  # Start with direct children
+    children = category.children.all()
+    all_children = list(children)
     for child in children:
-        all_children.extend(get_all_child_categories(child))  # Add grandchildren, etc.
+        all_children.extend(get_all_child_categories(child))
     return all_children
 
 def home_view(request):
     # Filter available clothes based on stock or other availability indicator
-    # Modify this condition based on your actual model
     available_clothes = Clothes.objects.filter(stock__gt=0)
+    
+    # Get 10 most recently created clothes for the main carousel
+    latest_clothes = Clothes.objects.filter(stock__gt=0).order_by('-created_at')[:10]
     
     # Apply search and category filters
     filterset = ClotheFilter(request.GET, queryset=available_clothes)
@@ -65,13 +73,20 @@ def home_view(request):
     except EmptyPage:
         page_obj = paginator.page(paginator.num_pages)
 
+    # Determine whether to show main image
+    show_main_image = (
+        not search_query and   # No search query
+        not category_slug      # No category filter
+    )
+
     context = {
         'clothes': page_obj,
+        'latest_clothes': latest_clothes,
         'paginator': paginator,
         'page_obj': page_obj,
+        'show_main_image': show_main_image
     }
     return render(request, 'shop/home.html', context)
-
 # Detail view for a specific clothing item and to handle rental requests
 def cloth_detail_view(request, cloth_id):
     # Get the current cloth item

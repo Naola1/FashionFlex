@@ -18,7 +18,7 @@
     /* ===== BODY - BACKGROUND IMAGE ===== */
     /* ===== Reusable CSS ===== */
     html, body {
-        background-image: url('/static/images/bg.jpeg') !important;
+        background-image: url('/static/images/bg.jpg') !important;
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
@@ -66,6 +66,7 @@
     .input-box {
         position: relative;
         margin-bottom: 1.5em;
+        
     }
     
     .input-field {
@@ -178,3 +179,22 @@
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/static/images/bg.jpeg') no-repeat center center fixed;
     background-size: cover;
 } */
+
+.error-message {
+    color: red;
+    font-size: 0.8em;
+    position: absolute;
+    top: -20px;
+    left: 0;
+}
+
+.input-field.error {
+    border-color: red;
+}
+.input-field.error:focus {
+    outline-color: red;
+}
+
+
+
+

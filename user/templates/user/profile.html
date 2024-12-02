@@ -1,0 +1,44 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h1>My Profile</h1>
+    
+    <div class="profile-details">
+        {% if user.profile_picture %}
+            <img src="{{ user.profile_picture.url }}" 
+                 alt="{{ user.username }}'s profile picture" 
+                 class="profile-picture" 
+                 loading="lazy">
+        {% else %}
+            <div class="default-profile-icon" title="Default Profile">
+                {{ user.username.0|upper }}
+            </div>
+        {% endif %}
+        
+        <div class="user-info">
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Full Name:</strong> {{ user.get_full_name }}</p>
+            <p><strong>Gender:</strong> {{ user.get_gender_display }}</p>
+            <p><strong>Phone:</strong> {{ user.phone_number|default:"Not provided" }}</p>
+            <p><strong>Address:</strong> {{ user.address|default:"Not provided" }}</p>
+        </div>
+    </div>
+    
+    <div class="profile-actions">
+        <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+        <a href="{% url 'change_password' %}" class="btn btn-secondary">Change Password</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}

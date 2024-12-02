@@ -1,0 +1,55 @@
+/* General Styles */
+body {
+  background-color: #f0f4f8; /* Light background for contrast */
+}
+
+/* Details Section */
+.cloth-item {
+  background-color: #ffffff; /* White background */
+  border-radius: 0.5rem; /* Rounded corners */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Shadow effect */
+  transition: transform 0.3s, box-shadow 0.3s; /* Hover effect */
+}
+
+.cloth-item:hover {
+  transform: translateY(-2px); /* Lift effect on hover */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+.price-summary {
+  display: flex;
+  justify-content: space-between;
+}
+
+.price-row.total {
+  font-size: 1.25rem; /* Increased font size for emphasis */
+  font-weight: bold;
+}
+
+/* Payment Modal */
+#paymentModal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(75, 85, 99, 0.6); /* Darker background */
+  display: none;
+  backdrop-filter: blur(5px); /* Blur effect */
+}
+
+#paymentModal .payment-summary .flex {
+  justify-content: space-between;
+}
+
+/* Rent Button */
+.rent-button {
+  background-color: #4f46e5; /* Main button color */
+  background-image: linear-gradient(90deg, #4f46e5, #3b82f6); /* Gradient effect */
+  color: white; /* Text color */
+  padding: 0.75rem 1.5rem; /* Increased padding */
+  border-radius: 0.5rem; /* Rounded corners */
+  transition: background 0.3s, transform 0.3s; /* Transition effects */
+}
+
+.rent-button:hover {
+  background-color: #1d4ed8; /* Darker blue on hover */
+  transform: translateY(-2px); /* Lift effect on hover */
+}

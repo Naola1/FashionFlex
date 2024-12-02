@@ -7,7 +7,7 @@
    <title>Login</title>
    <!-- BOXICONS -->
    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-   <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1">
+   <link rel="stylesheet" href="{% static 'css/login.css' %}?v=1">
 </head>
 <body>
   <div class="wrapper">
@@ -15,25 +15,37 @@
          <div class="login-header">Login</div>
          <form method="POST" action="{% url 'login' %}">
              {% csrf_token %}
-             {% if form.errors %}
-                 <div class="error-box">
-                     {% for field, errors in form.errors.items %}
-                         {% for error in errors %}
-                             <p>{{ field|title }}: {{ error }}</p>
-                         {% endfor %}
-                     {% endfor %}
-                 </div>
-             {% endif %}
              <div class="input-box">
-                 <input type="email" id="email" class="input-field" name="email" required>
+                 <input type="email" id="email" class="input-field {% if form.email.errors %}error{% endif %}" name="email" required>
                  <label for="email" class="label">Email</label>
                  <i class="bx bx-user icon"></i>
+                 {% if form.email.errors %}
+                     <div class="error-message">
+                         {% for error in form.email.errors %}
+                             {{ error }}
+                         {% endfor %}
+                     </div>
+                 {% endif %}
              </div>
              <div class="input-box">
-                 <input type="password" id="pass" class="input-field" name="password" required>
+                 <input type="password" id="pass" class="input-field {% if form.password.errors %}error{% endif %}" name="password" required>
                  <label for="pass" class="label">Password</label>
                  <i class="bx bx-lock-alt icon"></i>
+                 {% if form.password.errors %}
+                     <div class="error-message">
+                         {% for error in form.password.errors %}
+                             {{ error }}
+                         {% endfor %}
+                     </div>
+                 {% endif %}
              </div>
+            {% if form.non_field_errors %}
+                <div class="non-field-errors">
+                 {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                 {% endfor %}
+             </div>
+            {% endif %}
              <div class="remember-forgot">
                  <div class="remember-me">
                      <input type="checkbox" id="remember" name="remember">
