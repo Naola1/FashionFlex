@@ -1,5 +1,8 @@
 {% extends 'main.html' %}
 {% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="container mx-auto py-8 px-4">
@@ -128,4 +131,8 @@
 
     <!-- Related Items Section remains the same -->
 </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/detail.js' %}"></script>
 {% endblock %}
