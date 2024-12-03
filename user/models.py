@@ -39,6 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True)
     email_verified = models.BooleanField(default=False)
     verification_token = models.CharField(max_length=50, blank=True, null=True)
+    rented_items = models.ForeignKey('shop.Rental', on_delete=models.CASCADE, null=True, blank=True, related_name='rented_by_user'  )
     # User status fields
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
