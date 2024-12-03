@@ -28,8 +28,10 @@ def send_activation_email(user, request):
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': generate_token.make_token(user),
     })
+    email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [user.email])
+    email.content_subtype = 'html'
     try:
-        EmailMessage(subject=subject, body=message, from_email=settings.EMAIL_HOST_USER, to=[user.email]).send()
+        email.send()
     except Exception as e:
         print(f"Failed to send email: {e}")
 
@@ -130,7 +132,7 @@ def reset_password_view(request, uidb64, token):
                 return redirect("login")
         else:
             form = SetPasswordForm(user)
-        return render(request, "reset_password.html", {"form": form})
+        return render(request, "user/reset_password.html", {"form": form, "uidb64": uidb64, "token": token})
 
     messages.error(request, "Invalid or expired reset password link.")
     return redirect("forgot_password")
@@ -138,7 +140,7 @@ def reset_password_view(request, uidb64, token):
 
 def send_password_reset_email(request, user):
     subject = "Password Reset Requested"
-    email_template_name = "password_reset_email.html"
+    email_template_name = "user/password_reset_email.html"
     context = {
         "email": user.email,
         "domain": request.META['HTTP_HOST'],
@@ -146,8 +148,18 @@ def send_password_reset_email(request, user):
         "token": default_token_generator.make_token(user),
         "protocol": "http" if settings.DEBUG else "https",
     }
+    
     email_content = render_to_string(email_template_name, context)
-    send_mail(subject, email_content, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+    
+    # Create the email using EmailMessage
+    email = EmailMessage(subject, email_content, settings.EMAIL_HOST_USER, [user.email])
+    email.content_subtype = 'html'  # Set the content type to HTML
+    
+    try:
+        email.send()  # Send the email
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+
 
 @login_required
 def profile_view(request):

@@ -19,6 +19,7 @@ from django.shortcuts import render
 from django.db.models import Q
 from .models import Clothes
 from .filters import ClotheFilter
+from django.views.decorators.http import require_http_methods
 
 from django.shortcuts import render
 from django.db.models import Q
@@ -116,13 +117,20 @@ def cloth_detail_view(request, cloth_id):
     })
 
 # View to show all clothes rented by the current user
+
+
 @login_required
-def rented_view(request):
-    rented_clothes = Clothes.objects.filter(rental__user=request.user)
-    context = {
-        'rented_clothes': rented_clothes,
-    }
-    return render(request, 'shop/rented_list.html', context)
+def rented_items(request):
+    rentals = Rental.objects.filter(user=request.user)
+    return render(request, 'shop/rented_items.html', {'rentals': rentals})
+
+@login_required
+@require_http_methods(['PATCH'])
+def extend_rental(request, rental_id):
+    rental = Rental.objects.get(id=rental_id, user=request.user)
+    rental.extend_return_date()
+    rental.save()
+    return JsonResponse(rental.serialize())
 
 @login_required
 @require_POST
