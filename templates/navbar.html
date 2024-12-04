@@ -55,12 +55,9 @@
                         </a>
 
                         <!-- Futuristic Dropdown Menu -->
-                        <div class="absolute hidden group-hover:flex right-0 mt-3 w-72 bg-gray-900 bg-opacity-80 
-                                    border border-gray-700 rounded-xl shadow-2xl py-4 z-50 
-                                    transition-all duration-300 ease-in-out 
-                                    transform origin-top-right scale-95 opacity-0 
-                                    group-hover:scale-100 group-hover:opacity-100 flex-wrap">
-                            <div class="flex flex-col gap-2 px-4">
+                        <div class="absolute right-0 z-10 mt-2 w-56 rounded-lg shadow-xl bg-black ring-1 
+                        ring-gray-800 transition-transform duration-300 ease-in-out transform scale-95 
+                        opacity-0 group-hover:scale-100 group-hover:opacity-100">
                                 <a href="{% url 'profile' %}" 
                                    class="block px-4 py-2 text-gray-200 hover:bg-blue-600 
                                           hover:text-white rounded transition duration-300">
@@ -70,6 +67,11 @@
                                    class="block px-4 py-2 text-gray-200 hover:bg-blue-600 
                                           hover:text-white rounded transition duration-300">
                                     Edit Profile
+                                </a>
+                                <a href="{% url 'rented_list' %}" 
+                                class="block px-4 py-2 text-gray-200 hover:bg-blue-600 
+                                       hover:text-white rounded transition duration-300">
+                                 Rented Items
                                 </a>
                                 <hr class="my-2 border-gray-700">
                                 <a href="{% url 'logout' %}" 
