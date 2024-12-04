@@ -67,29 +67,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // Animated submit button
     submitButton.addEventListener('mouseenter', createSparkleEffect);
   
-    function createSparkleEffect(event) {
-      const button = event.target;
-      const sparkleCount = 10;
+    // function createSparkleEffect(event) {
+    //   const button = event.target;
+    //   const sparkleCount = 10;
   
-      for (let i = 0; i < sparkleCount; i++) {
-        const sparkle = document.createElement('div');
-        sparkle.classList.add('sparkle');
+    //   for (let i = 0; i < sparkleCount; i++) {
+    //     const sparkle = document.createElement('div');
+    //     sparkle.classList.add('sparkle');
         
-        const size = Math.random() * 5 + 2;
-        sparkle.style.width = `${size}px`;
-        sparkle.style.height = `${size}px`;
+    //     const size = Math.random() * 5 + 2;
+    //     sparkle.style.width = `${size}px`;
+    //     sparkle.style.height = `${size}px`;
         
-        const xPos = Math.random() * button.offsetWidth;
-        const yPos = Math.random() * button.offsetHeight;
+    //     const xPos = Math.random() * button.offsetWidth;
+    //     const yPos = Math.random() * button.offsetHeight;
         
-        sparkle.style.left = `${xPos}px`;
-        sparkle.style.top = `${yPos}px`;
+    //     sparkle.style.left = `${xPos}px`;
+    //     sparkle.style.top = `${yPos}px`;
         
-        button.appendChild(sparkle);
+    //     button.appendChild(sparkle);
         
-        setTimeout(() => {
-          sparkle.remove();
-        }, 500);
-      }
-    }
+    //     setTimeout(() => {
+    //       sparkle.remove();
+    //     }, 500);
+    //   }
+    // }
   });

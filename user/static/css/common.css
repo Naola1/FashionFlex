@@ -1,0 +1,122 @@
+:root {
+    --primary-color: #c6c3c3;
+    --second-color: #ffffff;
+    --black-color: #000000;
+}
+
+body {
+    background: linear-gradient(135deg, #0d1117, #161b22);
+    background-image: url('/static/images/bg.jpg') !important;
+    color: #e1e4e8;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.box {
+    background-color: rgba(20, 24, 30, 0.85);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    width: 90%;
+    max-width: 400px;
+}
+
+.header {
+    font-size: 2.5em;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #58a6ff;
+}
+
+.input-box {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background-color: #2a2a2a;
+    color: #ffffff;
+    transition: border-color 0.3s;
+    height: 50px; /* Consistent height */
+    box-sizing: border-box; /* Include padding in height */
+}
+
+.input-field:focus {
+    border-color: #ffffff;
+    outline: none;
+}
+
+.label {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    transition: .25s;
+}
+
+.input-field:focus ~ .label,
+.input-field:valid ~ .label {
+    top: 0;
+    font-size: 14px;
+    background-color: var(--primary-color);
+    border-radius: 20px;
+    color: var(--black-color);
+    padding: 0 10px;
+    border-color: var(--second-color);
+    box-shadow: 0 0 8px var(--second-color);
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.success {
+    color: green;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.input-submit {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #58a6ff;
+    color: white;
+    font-weight: 600;
+    font-weight: 900;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    height: 50px; /* Consistent height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .input-submit:hover {
+        background: var(--second-color);
+        color: var(--primary-color);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+.link {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: #58a6ff;
+    text-decoration: underline;
+}
