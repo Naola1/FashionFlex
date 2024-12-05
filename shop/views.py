@@ -10,6 +10,7 @@ from .forms import RentalForm
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from decimal import Decimal
+from django.contrib import messages
 from .forms import RentalForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -107,18 +108,17 @@ def cloth_detail_view(request, cloth_id):
             rental.clothe = cloth
             rental.total_price = rental.calculate_total_price()
             rental.save()
-            return JsonResponse({'message': 'Rental created successfully!'}, status=201)
-
+            messages.success(request, 'Rental created successfully!')
+            return redirect('rented_items')
     return render(request, 'shop/detail.html', {
         'cloth': cloth,
         'related_clothes': related_clothes,
         'form': form,
         'price': float(cloth.price),
     })
+    
 
 # View to show all clothes rented by the current user
-
-
 @login_required
 def rented_items(request):
     rentals = Rental.objects.filter(user=request.user)
