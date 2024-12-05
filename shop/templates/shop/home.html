@@ -49,7 +49,18 @@
 
     <!-- Available Clothes Section -->
     <div class="container mx-auto py-10">
-        <h2 class="text-3xl font-bold text-center mb-6 mt-8">Available Clothes</h2>
+        {% if search_query %}
+            <div class="bg-gray-100 rounded-lg p-4 mb-6 text-center">
+                <h2 class="text-2xl mt-12 font-bold text-gray-800">
+                    Search Results for "{{ search_query }}"
+                </h2>
+                <p class="text-gray-600 mt-2">
+                    {{ clothes.paginator.count }} item{% if clothes.paginator.count != 1 %}s{% endif %} found
+                </p>
+            </div>
+        {% else %}
+            <h2 class="text-3xl font-bold text-center mb-6 mt-8">Available Clothes</h2>
+        {% endif %}
         
         <div id="clothes-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-7">
             {% for cloth in clothes %}
@@ -62,9 +73,16 @@
                     </div>
                 </div>
             {% empty %}
-                <p class="text-center col-span-full text-gray-700">No clothes available.</p>
+                <p class="text-center col-span-full text-gray-700">
+                    {% if search_query %}
+                        No items found matching "{{ search_query }}".
+                    {% else %}
+                        No clothes available.
+                    {% endif %}
+                </p>
             {% endfor %}
         </div>
+
 
         <!-- Pagination Section -->
         <div class="flex justify-center mt-8 space-x-4">

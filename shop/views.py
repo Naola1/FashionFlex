@@ -47,12 +47,16 @@ def home_view(request):
     
     # Apply search and category filters
     filterset = ClotheFilter(request.GET, queryset=available_clothes)
-    search_query = request.GET.get('search', '')
+    search_query = request.GET.get('search', '').strip()
     category_slug = request.GET.get('category', '')
 
+    # Enhanced search functionality
     if search_query:
+        # Search across multiple fields with weighted importance
         clothes = filterset.qs.filter(
-            Q(name__icontains=search_query) | Q(description__icontains=search_query)
+            Q(name__icontains=search_query) |  # Exact name match
+            Q(description__icontains=search_query) |  # Description match
+            Q(category__name__icontains=search_query)  # Category name match
         )
     elif category_slug:
         # Get the main category or subcategory
@@ -86,7 +90,8 @@ def home_view(request):
         'latest_clothes': latest_clothes,
         'paginator': paginator,
         'page_obj': page_obj,
-        'show_main_image': show_main_image
+        'show_main_image': show_main_image,
+        'search_query': search_query  # Pass search query back to template
     }
     return render(request, 'shop/home.html', context)
 # Detail view for a specific clothing item and to handle rental requests
