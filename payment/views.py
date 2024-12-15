@@ -122,10 +122,11 @@ def payment_success(request):
     return_date = request.GET.get('return_date')
     total_price = request.GET.get('total_price')
 
+    clothe = Clothes.objects.get(id=cloth_id)
     # Create rental record
     rental = Rental.objects.create(
         user=request.user,
-        cloth_id=cloth_id,
+        clothe=clothe,
         duration=duration,
         rental_date=rental_date,
         return_date=return_date,

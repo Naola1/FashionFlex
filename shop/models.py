@@ -31,6 +31,7 @@ class Clothes(models.Model):
     size = models.CharField(max_length=100)
     color = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    #price = models.IntegerField(default = 0)
     image = models.ImageField(upload_to="clothes/")
     availability = models.BooleanField(default=True)
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])  # Rating from 1 to 5
@@ -74,8 +75,21 @@ class Rental(models.Model):
         return self.clothe.price * self.duration
 
     def calculate_return_date(self):
-        return self.rental_date + timedelta(days=self.duration)
+        duration_days = int(self.duration)
+        return self.rental_date + timedelta(days=duration_days)
 
+
+    def can_rent_again(self, user, cloth):
+        """
+        Check if a user can rent this cloth again
+        """
+        existing_rental = Rental.objects.filter(
+            user=user, 
+            clothe=cloth, 
+            status='active'
+        ).exists()
+        return not existing_rental
+     
     def save(self, *args, **kwargs):
         if not self.total_price:
             self.total_price = self.calculate_total_price()
