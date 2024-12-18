@@ -30,24 +30,19 @@ document.addEventListener('DOMContentLoaded', function() {
         // Calculate return date
         const returnDate = new Date(startDate);
         returnDate.setDate(startDate.getDate() + duration);
-        
-        // Format return date for input
-        const returnDateFormatted = returnDate.toISOString().split('T')[0];
-        returnDateInput.value = returnDateFormatted;
+        returnDateInput.value = returnDate.toISOString().split('T')[0];
 
         // Calculate total price
         const pricePerDay = parseFloat(document.querySelector('[data-price]').getAttribute('data-price'));
-        const totalPrice = (pricePerDay * duration).toFixed(2);
-        totalPriceElement.textContent = `$${totalPrice}`;
+        totalPriceElement.textContent = `$${(pricePerDay * duration).toFixed(2)}`;
     }
 
-    // Event listeners for dynamic updates
+    // Event listeners for updates
     durationSelect.addEventListener('change', updateRentalDetails);
     rentalDateInput.addEventListener('change', updateRentalDetails);
 
     // Rent Now Button - Open Payment Modal
     rentNowBtn.addEventListener('click', function() {
-        // Validate inputs
         if (!rentalDateInput.value || !durationSelect.value) {
             alert('Please select a start date and duration.');
             return;
@@ -65,14 +60,11 @@ document.addEventListener('DOMContentLoaded', function() {
         modalRentalNotes.value = document.getElementById('notes').value || '';
         modalRentalAmount.value = totalPriceElement.textContent.replace('$', '');
 
-        // Show payment modal
         paymentModal.classList.remove('hidden');
     });
 
     // Cancel Payment Button
-    cancelPaymentBtn.addEventListener('click', function() {
-        paymentModal.classList.add('hidden');
-    });
+    cancelPaymentBtn.addEventListener('click', () => paymentModal.classList.add('hidden'));
 
     // Close modal if clicked outside
     paymentModal.addEventListener('click', function(event) {

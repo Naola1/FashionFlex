@@ -1,32 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
-from django.utils import timezone
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from shop.models import Clothes, Rental, Category
-from .forms import RentalForm
-from .filters import ClotheFilter
-from .forms import RentalForm
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from decimal import Decimal
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_protect
+
+from .models import Clothes, Rental, Category
 from .forms import RentalForm
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
-# Home list view to show all available clothes with filtering and search functionality
-# views.py
-from django.shortcuts import render
-from django.db.models import Q
-from .models import Clothes
 from .filters import ClotheFilter
-from django.views.decorators.http import require_http_methods
 
-from django.shortcuts import render
-from django.db.models import Q
-from .models import Clothes
-from .filters import ClotheFilter
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from datetime import timedelta
+
 
 def get_all_child_categories(category):
     """
@@ -38,40 +23,29 @@ def get_all_child_categories(category):
         all_children.extend(get_all_child_categories(child))
     return all_children
 
+
 def home_view(request):
-    # Filter available clothes based on stock or other availability indicator
     available_clothes = Clothes.objects.filter(stock__gt=0)
-    
-    # Get 10 most recently created clothes for the main carousel
     latest_clothes = Clothes.objects.filter(stock__gt=0).order_by('-created_at')[:10]
-    
-    # Apply search and category filters
     filterset = ClotheFilter(request.GET, queryset=available_clothes)
     search_query = request.GET.get('search', '').strip()
     category_slug = request.GET.get('category', '')
 
-    # Enhanced search functionality
     if search_query:
-        # Search across multiple fields with weighted importance
         clothes = filterset.qs.filter(
-            Q(name__icontains=search_query) |  # Exact name match
-            Q(description__icontains=search_query) |  # Description match
-            Q(category__name__icontains=search_query)  # Category name match
+            Q(name__icontains=search_query) | 
+            Q(description__icontains=search_query) | 
+            Q(category__name__icontains=search_query) 
         )
     elif category_slug:
-        # Get the main category or subcategory
         category = get_object_or_404(Category, slug=category_slug)
-        
-        # Include clothes from the selected category and all its subcategories
         all_categories = [category] + get_all_child_categories(category)
         clothes = filterset.qs.filter(category__in=all_categories)
     else:
         clothes = filterset.qs
 
-    # Pagination
-    paginator = Paginator(clothes, 10)  # 10 items per page
+    paginator = Paginator(clothes, 10)
     page_number = request.GET.get('page', 1)
-    
     try:
         page_obj = paginator.page(page_number)
     except PageNotAnInteger:
@@ -79,11 +53,7 @@ def home_view(request):
     except EmptyPage:
         page_obj = paginator.page(paginator.num_pages)
 
-    # Determine whether to show main image
-    show_main_image = (
-        not search_query and   # No search query
-        not category_slug      # No category filter
-    )
+    show_main_image = not search_query and not category_slug
 
     context = {
         'clothes': page_obj,
@@ -91,106 +61,84 @@ def home_view(request):
         'paginator': paginator,
         'page_obj': page_obj,
         'show_main_image': show_main_image,
-        'search_query': search_query  # Pass search query back to template
+        'search_query': search_query
     }
     return render(request, 'shop/home.html', context)
-# Detail view for a specific clothing item and to handle rental requests
+
+
 def cloth_detail_view(request, cloth_id):
-    # Get the current cloth item
     cloth = get_object_or_404(Clothes, id=cloth_id)
+    related_clothes_list = Clothes.objects.filter(category=cloth.category).exclude(id=cloth_id)
+    paginator = Paginator(related_clothes_list, 10)
+    page_number = request.GET.get('page', 1)
+    try:
+        related_clothes = paginator.page(page_number)
+    except PageNotAnInteger:
+        related_clothes = paginator.page(1)
+    except EmptyPage:
+        related_clothes = paginator.page(paginator.num_pages)
 
-    # Fetch related clothes in the same category, excluding the current item
-    related_clothes = Clothes.objects.filter(category=cloth.category).exclude(id=cloth_id)[:3]
-
-    # Initialize the form
     form = RentalForm()
+    existing_rental = None
+    if request.user.is_authenticated:
+        existing_rental = Rental.objects.filter(user=request.user, clothe_id=cloth.id, status='active').first()
 
     if request.method == "POST" and request.user.is_authenticated:
         form = RentalForm(request.POST)
-        if form.is_valid():
-            rental = form.save(commit=False)
-            rental.user = request.user
-            rental.clothe = cloth
-            rental.total_price = rental.calculate_total_price()
-            rental.save()
-            messages.success(request, 'Rental created successfully!')
-            return redirect('rented_items')
-    return render(request, 'shop/detail.html', {
+        if existing_rental:
+            messages.warning(request, 'You have already rented this item.')
+        elif form.is_valid() and cloth.stock > 0:
+            rental_data = form.cleaned_data
+            rental_data.update({
+                'user_id': request.user.id,
+                'cloth_id': cloth.id,
+                'total_price': form.cleaned_data['duration'] * cloth.price
+            })
+            return redirect(
+                'initiate_payment', 
+                cloth_id=cloth.id, 
+                duration=rental_data['duration'], 
+                rental_date=rental_data['rental_date'], 
+                return_date=rental_data['return_date'], 
+                total_price=rental_data['total_price']
+            )
+        else:
+            messages.error(request, 'This item is out of stock.')
+
+    context = {
         'cloth': cloth,
         'related_clothes': related_clothes,
         'form': form,
         'price': float(cloth.price),
-    })
-    
+        'page_obj': related_clothes,
+        'existing_rental': existing_rental
+    }
+    return render(request, 'shop/detail.html', context)
 
-# View to show all clothes rented by the current user
+
 @login_required
 def rented_items(request):
     rentals = Rental.objects.filter(user=request.user)
     return render(request, 'shop/rented_items.html', {'rentals': rentals})
 
+
+@csrf_protect
 @login_required
-@require_http_methods(['PATCH'])
 def extend_rental(request, rental_id):
-    rental = Rental.objects.get(id=rental_id, user=request.user)
-    rental.extend_return_date()
-    rental.save()
-    return JsonResponse(rental.serialize())
+    rental = get_object_or_404(Rental, pk=rental_id, user=request.user)
+    cloth = rental.clothe
 
-@login_required
-@require_POST
-def process_payment(request):
-    try:
-        # Get form data
-        cloth_id = request.POST.get('cloth_id')
-        duration = int(request.POST.get('rental_duration'))
-        start_date = request.POST.get('rental_start_date')
-        notes = request.POST.get('rental_notes')
-        total_amount = Decimal(request.POST.get('total_amount'))
+    days_to_extend = int(request.POST.get('days', 0))
+    original_return_date = rental.return_date
+    new_return_date = original_return_date + timedelta(days=days_to_extend)
+    extension_price = days_to_extend * cloth.price
 
-        # Get the cloth
-        cloth = get_object_or_404(Clothes, id=cloth_id)
-
-        # Validate availability
-        if not cloth.is_available:
-            return JsonResponse({
-                'success': False,
-                'message': 'This item is no longer available.'
-            }, status=400)
-
-        # Process payment (integrate with your payment gateway here)
-        # This is where you'd integrate with Stripe, PayPal, etc.
-        try:
-            # Placeholder for payment processing
-            payment_successful = True  # Replace with actual payment processing
-            
-            if payment_successful:
-                # Create rental order
-                rental_order = Rental.objects.create(
-                    user=request.user,
-                    cloth=cloth,
-                    duration=duration,
-                    start_date=start_date,
-                    total_amount=total_amount,
-                    notes=notes,
-                    status='confirmed'
-                )
-                
-                # Update cloth availability
-                cloth.is_available = False
-                cloth.save()
-                
-                # Redirect to success page
-                return redirect('rental_success', order_id=rental_order.id)
-            
-        except Exception as e:
-            return JsonResponse({
-                'success': False,
-                'message': 'Payment processing failed. Please try again.'
-            }, status=400)
-
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'message': 'An error occurred. Please try again.'
-        }, status=400)
+    return redirect(
+        'initiate_payment', 
+        cloth_id=cloth.id, 
+        duration=days_to_extend, 
+        rental_date=original_return_date, 
+        return_date=new_return_date, 
+        total_price=extension_price, 
+        original_rental_id=rental_id
+    )

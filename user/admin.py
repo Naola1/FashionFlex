@@ -10,4 +10,5 @@ class UserAdmin(admin.ModelAdmin):
     list_per_page = 20
     # fieldsets = (
     #     (None, {'fields': ('email', 'username', 'role')}),
-    #     ('Personal info', {'fields': ('first_name', 'middle_name', 'last_name'
+    #     ('Personal info', {'fields': ('first_name', 'middle_name', 'last_name')
+    

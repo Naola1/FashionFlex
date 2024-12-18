@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # my apps
     "shop",
     "user",
+    "payment",
     'cart',
     'globaltags',
 ]
@@ -205,3 +206,8 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER') + ""
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') + ""
+
+# Stripe Configuration
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
+STRIPE_WEBHOOK_SECRET = 'your_webhook_secret_here'
